@@ -52,22 +52,32 @@ public class NodeList {
 	}
 
 	public void nextTimeStep() {
+//		System.out.println();
 		Random rgen = new Random();
+		int i=0;
 		for (Node n : list) {
 			int j = rgen.nextInt(mi);
 			int jIndex = n.connections.get(j);
 			if (n.s != list.get(jIndex).s) {
 				if (rgen.nextDouble() < p) {
 					int aIndex = rgen.nextInt(N);
-					while (n.s != list.get(aIndex).s || !n.connections.contains(aIndex))
+					
+					while (n.s != list.get(aIndex).s || n.connections.contains(aIndex)||aIndex==i){
 						aIndex = rgen.nextInt(N);
+						//System.out.println("test");
+					}
+//					System.out.println(i+" "+aIndex+" "+j);
 					n.connections.set(j, aIndex);
+					list.get(aIndex).connections.add(i);
 				} else {
+//					System.out.println("rev");
 					n.s *= -1;
 				}
+				
 			}
+			++i;
 		}
-
+//		System.out.println();
 	}
 
 	public void calcM() {
@@ -128,7 +138,16 @@ public class NodeList {
 
 	public void printAllConnections() {
 		for (int ii = 0; ii < N; ii++) {
-			System.out.println(list.get(ii).connections);
+			System.out.println(ii+" "+list.get(ii).s+" "+list.get(ii).connections);
 		}
+	}
+	
+	
+	public void printParm(){
+		this.calcRho();
+		this.calcM();
+		this.printRhoM();
+		this.printRhoP();
+		this.printM();
 	}
 }

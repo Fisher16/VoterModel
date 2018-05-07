@@ -19,8 +19,33 @@ public class Simulation {
 		test.printNumberOfConnections();
 	}
 	
+	public void nextStepTest(){
+		NodeList test=new NodeList(3,10,0.5);
+		System.out.println("OK");
+		test.printAllConnections();
+		test.nextTimeStep();
+		test.printAllConnections();
+		test.nextTimeStep();
+		test.printAllConnections();
+		
+	}
+	
+	
+	public void evolutionTest1(){
+		NodeList test=new NodeList(4,10000,0.5);
+		System.out.println("OK");
+		test.printParm();
+		for(int i=0;i<2000;++i){
+			test.nextTimeStep();
+			
+			if(i%100==0){System.out.println("*****************");test.printParm();}
+		}
+	}
+	
 	public Simulation(){
-		this.parameterTest();
+		//this.parameterTest();
+		//this.nextStepTest();
+		this.evolutionTest1();
 	}
 
 }
