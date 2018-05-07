@@ -10,7 +10,7 @@ public class Simulation {
 	}
 	
 	public Simulation(){
-		this.NodeListGenerationTest();
+		//this.NodeListGenerationTest();
 	}
 
 }

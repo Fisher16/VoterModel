@@ -48,5 +48,26 @@ public class NodeList {
 		//}
 
 	}
+	
+	
+	
+	public void nextTimeStep(){
+		Random rgen=new Random();
+		for(Node n:list){
+			int j=rgen.nextInt(mi);
+			int jIndex=n.connections.get(j);
+			if(n.s!=list.get(jIndex).s){
+				if(rgen.nextDouble()<p){
+					int aIndex=rgen.nextInt(N);
+					while(n.s!=list.get(aIndex).s||!n.connections.contains(aIndex))aIndex=rgen.nextInt(N);
+					n.connections.set(j, aIndex);
+				}
+				else{
+					n.s*=-1;
+				}
+			}
+		}
+		
+	}
 
 }
