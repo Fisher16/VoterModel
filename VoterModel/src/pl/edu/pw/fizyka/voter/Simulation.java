@@ -1,5 +1,10 @@
 package pl.edu.pw.fizyka.voter;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
+
 public class Simulation {
 	
 	public void NodeListGenerationTest(){
@@ -24,28 +29,70 @@ public class Simulation {
 		System.out.println("OK");
 		test.printAllConnections();
 		test.nextTimeStep();
+		System.out.println("*****");
 		test.printAllConnections();
 		test.nextTimeStep();
+		System.out.println("*****");
 		test.printAllConnections();
 		
 	}
 	
 	
 	public void evolutionTest1(){
-		NodeList test=new NodeList(4,10000,0.5);
+		NodeList test=new NodeList(4,10000,0);
 		System.out.println("OK");
 		test.printParm();
-		for(int i=0;i<2000;++i){
+		for(int i=0;i<200000&&test.M*test.M!=1;++i){
 			test.nextTimeStep();
 			
-			if(i%100==0){System.out.println("*****************");test.printParm();}
+			if(i%1000==0){System.out.println("*****************");test.printParm();}
 		}
+		int conn=0;
+		for(Node n:test.list){
+			conn+=n.connections.size();
+		}
+		System.out.println("Total num of conn: "+conn/2);
 	}
+	
+	public void dataGen(){
+		
+		PrintWriter writer;
+		DecimalFormat df = new DecimalFormat("0.000");  
+		try {
+			writer = new PrintWriter("11_dataBig_N1k_Mi4_ttofrozen.txt", "UTF-8");
+			writer.println("p rhoP rhoM M");
+			for(double i=0.10;i<=0.71;i+=0.05){
+				NodeList test=new NodeList(4,1000,i);
+				System.out.println("ok");
+				
+				while(test.calcRho()>0&&test.M*test.M!=1){
+	//				System.out.println(test.calcRho()+" "+test.M);
+					test.nextTimeStep();
+					test.calcM();
+				}
+
+				test.calcRho();
+				test.calcM();
+				String str=df.format(i)+" "+test.getRhoP()+" "+test.getRhoM()+" "+test.getM()+"   "+test.rho;
+				writer.println(str.replaceAll("\\.", ","));
+				writer.flush();
+				System.out.println(i);
+			}
+			writer.close();
+			
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}	
+		}
+		
+		
+	
 	
 	public Simulation(){
 		//this.parameterTest();
 		//this.nextStepTest();
-		this.evolutionTest1();
+		//this.evolutionTest1();
+		this.dataGen();
 	}
 
 }
