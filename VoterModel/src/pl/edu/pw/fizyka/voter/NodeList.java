@@ -78,7 +78,7 @@ public class NodeList {
 							if(n.s==nd.s&&list.indexOf(n)!=list.indexOf(nd)&&!n.connections.contains(aIndex))
 								aList.add(list.indexOf(nd));
 						if(aList.size()>0)aIndex= aList.get(rgen.nextInt(aList.size()));
-						System.out.println("Switcheru"+aList);
+			//			System.out.println("Switcheru"+aList);
 					}
 					//System.out.println(list.indexOf(n)+" "+aIndex+" "+jIndex);
 					if(aList.size()>0){

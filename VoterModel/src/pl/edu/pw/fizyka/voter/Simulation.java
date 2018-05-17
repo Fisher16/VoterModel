@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Simulation {
 	
@@ -57,26 +58,56 @@ public class Simulation {
 	public void dataGen(){
 		
 		PrintWriter writer;
-		DecimalFormat df = new DecimalFormat("0.000");  
+		PrintWriter writer2;
+		int N=500;
+		int mi=4;
+		DecimalFormat df = new DecimalFormat("0.000");
+		DecimalFormat df2 = new DecimalFormat("0.00");
 		try {
-			writer = new PrintWriter("11_dataBig_N1k_Mi4_ttofrozen.txt", "UTF-8");
-			writer.println("p rhoP rhoM M");
-			for(double i=0.10;i<=0.71;i+=0.05){
-				NodeList test=new NodeList(4,1000,i);
+			writer = new PrintWriter("13_data_N"+N+"_Mi"+mi+".txt", "UTF-8");
+			
+			writer.println("p rhoP rhoM M rho");
+			for(double i=0.2;i<=0.61;i+=0.1){
+				NodeList test=new NodeList(mi,N,i);
 				System.out.println("ok");
 				
-				while(test.calcRho()>0&&test.M*test.M!=1){
+				writer2= new PrintWriter("rho/dataAVG_N"+N+"_p"+df2.format(i));
+				
+				double rho=test.calcRho();
+				
+				ArrayList<Double> rhoList=new ArrayList<Double>();
+				int j=0;
+				int avg=0;
+				for(;avg<10;++avg) {
+					test=new NodeList(mi,N,i);
+					
+					j=0;
+					rho=test.calcRho();
+					
+					System.out.println("ok "+avg);
+				while(rho>0){
+	//				writer2.println(j+" "+rho);
 	//				System.out.println(test.calcRho()+" "+test.M);
+					if(rhoList.size()==j)rhoList.add(rho);
+					else rhoList.set(j, rhoList.get(j)+rho);
 					test.nextTimeStep();
-					test.calcM();
+					rho=test.calcRho();
+					j++;
 				}
-
+				System.out.println("j "+j);
+				}
 				test.calcRho();
 				test.calcM();
+				
+				for(int x=0;x<rhoList.size();x++)
+					writer2.println(x+" "+rhoList.get(x)/avg);
+				writer2.flush();
+				writer2.close();
+				
 				String str=df.format(i)+" "+test.getRhoP()+" "+test.getRhoM()+" "+test.getM()+"   "+test.rho;
 				writer.println(str.replaceAll("\\.", ","));
 				writer.flush();
-				System.out.println(i);
+				System.out.println("Iteracja p="+i);
 			}
 			writer.close();
 			
