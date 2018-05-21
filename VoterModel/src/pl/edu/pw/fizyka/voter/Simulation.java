@@ -56,7 +56,6 @@ public class Simulation {
 		test.printRhoM();
 		test.printAllConnections();
 
-
 	}
 
 	public void evolutionTest1() {
@@ -90,7 +89,7 @@ public class Simulation {
 			writer = new PrintWriter("13_data_N" + N + "_Mi" + mi + ".txt", "UTF-8");
 
 			writer.println("p rhoP rhoM M rho");
-			for (double i = 0.2; i <= 0.61; i += 0.1) {
+			for (double i = 0.2; i <= 0.61; i += 0.2) {
 				NodeList test = new NodeList(mi, N, i);
 				System.out.println("ok");
 
@@ -99,24 +98,29 @@ public class Simulation {
 				double rho = test.calcRho();
 
 				ArrayList<Double> rhoList = new ArrayList<Double>();
+				ArrayList<Double> mList = new ArrayList<Double>();
 				int j = 0;
 				int avg = 0;
-				for (; avg < 10; ++avg) {
+				for (; avg < 1; ++avg) {
 					test = new NodeList(mi, N, i);
 
 					j = 0;
 					rho = test.calcRho();
-
+					double m = test.calcM();
 					System.out.println("ok " + avg);
 					while (rho > 0) {
 						// writer2.println(j+" "+rho);
 						// System.out.println(test.calcRho()+" "+test.M);
-						if (rhoList.size() == j)
+						if (rhoList.size() == j) {
 							rhoList.add(rho);
-						else
+							mList.add(m);
+						} else {
 							rhoList.set(j, rhoList.get(j) + rho);
+							mList.set(j, mList.get(j) + m);
+						}
 						test.nextTimeStep();
 						rho = test.calcRho();
+						m = test.calcM();
 						j++;
 					}
 					System.out.println("j " + j);
@@ -125,7 +129,7 @@ public class Simulation {
 				test.calcM();
 
 				for (int x = 0; x < rhoList.size(); x++)
-					writer2.println(x + " " + rhoList.get(x) / avg);
+					writer2.println(x + " " + rhoList.get(x) / avg +" "+ mList.get(x)/avg);
 				writer2.flush();
 				writer2.close();
 
@@ -144,9 +148,9 @@ public class Simulation {
 
 	public Simulation() {
 		// this.parameterTest();
-		//this.nextStepTest();
+		// this.nextStepTest();
 		// this.evolutionTest1();
-		 this.dataGen();
+		this.dataGen();
 	}
 
 }
